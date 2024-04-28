@@ -1377,13 +1377,10 @@ static HRESULT add_column_values(LDAP_namespace *ldap, struct ldap_search_contex
     {
         WCHAR **values = ldap_get_valuesW(ldap->ld, ldap_ctx->entry, name);
         if (!values)
-        {
-            memset(col, 0, sizeof(*col));
             return E_ADS_COLUMN_NOT_SET;
-        }
         count = ldap_count_valuesW(values);
 
-        col->pADsValues = heap_alloc(count * sizeof(col->pADsValues[0]));
+        col->pADsValues = heap_alloc_zero(count * sizeof(col->pADsValues[0]));
         if (!col->pADsValues)
         {
             ldap_value_freeW(values);
@@ -1405,13 +1402,10 @@ static HRESULT add_column_values(LDAP_namespace *ldap, struct ldap_search_contex
     {
         WCHAR **values = ldap_get_valuesW(ldap->ld, ldap_ctx->entry, name);
         if (!values)
-        {
-            memset(col, 0, sizeof(*col));
             return E_ADS_COLUMN_NOT_SET;
-        }
         count = ldap_count_valuesW(values);
 
-        col->pADsValues = heap_alloc(count * sizeof(col->pADsValues[0]));
+        col->pADsValues = heap_alloc_zero(count * sizeof(col->pADsValues[0]));
         if (!col->pADsValues)
         {
             ldap_value_freeW(values);
@@ -1443,13 +1437,10 @@ static HRESULT add_column_values(LDAP_namespace *ldap, struct ldap_search_contex
     {
         WCHAR **values = ldap_get_valuesW(ldap->ld, ldap_ctx->entry, name);
         if (!values)
-        {
-            memset(col, 0, sizeof(*col));
             return E_ADS_COLUMN_NOT_SET;
-        }
         count = ldap_count_valuesW(values);
 
-        col->pADsValues = heap_alloc(count * sizeof(col->pADsValues[0]));
+        col->pADsValues = heap_alloc_zero(count * sizeof(col->pADsValues[0]));
         if (!col->pADsValues)
         {
             ldap_value_freeW(values);
@@ -1472,13 +1463,10 @@ static HRESULT add_column_values(LDAP_namespace *ldap, struct ldap_search_contex
     {
         struct berval **values = ldap_get_values_lenW(ldap->ld, ldap_ctx->entry, name);
         if (!values)
-        {
-            memset(col, 0, sizeof(*col));
             return E_ADS_COLUMN_NOT_SET;
-        }
         count = ldap_count_values_len(values);
 
-        col->pADsValues = heap_alloc(count * sizeof(col->pADsValues[0]));
+        col->pADsValues = heap_alloc_zero(count * sizeof(col->pADsValues[0]));
         if (!col->pADsValues)
         {
             ldap_value_free_len(values);
@@ -1516,6 +1504,8 @@ static HRESULT WINAPI search_GetColumn(IDirectorySearch *iface, ADS_SEARCH_HANDL
     TRACE("%p,%p,%s,%p\n", iface, res, debugstr_w(name), col);
 
     if (!res || !name || !ldap_ctx->entry) return E_ADS_BAD_PARAMETER;
+
+    memset(col, 0, sizeof(*col));
 
     if (!wcsicmp(name, L"ADsPath"))
     {
