@@ -609,6 +609,7 @@ static HRESULT WINAPI ldapns_Get(IADs *iface, BSTR name, VARIANT *prop)
 
                 for (idx = 0; idx < count; idx++)
                 {
+                    TRACE("=> %s\n", debugstr_w(ldap->attrs[i].values[idx]));
                     V_VT(&item) = VT_BSTR;
                     V_BSTR(&item) = SysAllocString(ldap->attrs[i].values[idx]);
                     if (!V_BSTR(&item))
@@ -631,6 +632,7 @@ fail:
             }
             else
             {
+                TRACE("=> %s\n", debugstr_w(ldap->attrs[i].values[0]));
                 V_BSTR(prop) = SysAllocString(ldap->attrs[i].values[0]);
                 if (!V_BSTR(prop)) return E_OUTOFMEMORY;
                 V_VT(prop) = VT_BSTR;
@@ -1162,7 +1164,10 @@ static HRESULT WINAPI search_ExecuteSearch(IDirectorySearch *iface, LPWSTR filte
         }
 
         for (i = 0; i < count; i++)
+        {
+            TRACE("=> %s\n", debugstr_w(names[i]));
             props[i] = names[i];
+        }
 
         props[count] = NULL;
     }
