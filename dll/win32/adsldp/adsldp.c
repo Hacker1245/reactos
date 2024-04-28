@@ -399,6 +399,7 @@ struct ldap_search_context
     LDAPMessage *res, *entry;
     BerElement *ber;
     ULONG count, pos;
+    BOOL add_ADsPath;
 };
 
 static inline LDAP_namespace *impl_from_IADs(IADs *iface)
@@ -1258,7 +1259,10 @@ static HRESULT WINAPI search_GetNextColumnName(IDirectorySearch *iface, ADS_SEAR
     if (!name || !ldap_ctx || !ldap_ctx->entry) return E_ADS_BAD_PARAMETER;
 
     if (!ldap_ctx->ber)
+    {
         attr = ldap_first_attributeW(ldap->ld, ldap_ctx->entry, &ldap_ctx->ber);
+        ldap_ctx->add_ADsPath = TRUE;
+    }
     else
         attr = ldap_next_attributeW(ldap->ld, ldap_ctx->entry, ldap_ctx->ber);
 
@@ -1267,6 +1271,13 @@ static HRESULT WINAPI search_GetNextColumnName(IDirectorySearch *iface, ADS_SEAR
         TRACE("=> %s\n", debugstr_w(attr));
         *name = AllocADsStr(attr);
         ldap_memfreeW(attr);
+        return *name ? S_OK : E_OUTOFMEMORY;
+    }
+    else if (ldap_ctx->add_ADsPath)
+    {
+        ldap_ctx->add_ADsPath = FALSE;
+        *name = AllocADsStr((WCHAR *)L"ADsPath");
+        TRACE("=> %s\n", debugstr_w(*name));
         return *name ? S_OK : E_OUTOFMEMORY;
     }
 
