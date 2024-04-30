@@ -4,12 +4,19 @@ include_directories(include/internal/mingw-w64)
 list(APPEND MSVCRTEX_SOURCE
     ${CRT_STARTUP_SOURCE}
     math/sincos.c
-    misc/dbgrpt.cpp
     misc/fltused.c
     misc/isblank.c
     misc/iswblank.c
     misc/ofmt_stub.c
     stdio/acrt_iob_func.c)
+
+if(DLL_EXPORT_VERSION LESS 0x600)
+    list(APPEND MSVCRTEX_SOURCE
+        misc/dbgrpt.cpp
+        stdlib/_invalid_parameter.c
+        stdlib/rand_s.c
+    )
+endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
     # Clang performs some optimizations requiring those funtions
