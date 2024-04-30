@@ -36,7 +36,7 @@
 #include "winldap.h"
 #include "winber.h"
 
-#include "adsldp_private.h"
+#include "precomp.h"
 
 #include "wine/debug.h"
 

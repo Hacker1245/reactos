@@ -2,6 +2,8 @@
 add_subdirectory(acledit)
 add_subdirectory(aclui)
 add_subdirectory(activeds)
+add_subdirectory(adsldp)
+add_subdirectory(adsldpc)
 add_subdirectory(actxprxy)
 add_subdirectory(advapi32)
 add_subdirectory(advapi32_vista)
